@@ -1,0 +1,64 @@
+name: Publish Quantum Notes
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Configure site path
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+          REPO_FULL_NAME: ${{ github.repository }}
+          CUSTOM_BASE: ${{ vars.SITE_BASE }}
+          CUSTOM_ORIGIN: ${{ vars.SITE_ORIGIN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+        run: |
+          if [ -n "$CUSTOM_BASE" ]; then
+            echo "SITE_BASE=$CUSTOM_BASE" >> "$GITHUB_ENV"
+          elif [[ "$REPO_NAME" == *.github.io ]]; then
+            echo "SITE_BASE=/" >> "$GITHUB_ENV"
+          else
+            echo "SITE_BASE=/$REPO_NAME/" >> "$GITHUB_ENV"
+          fi
+          echo "SITE_REPOSITORY=$REPO_FULL_NAME" >> "$GITHUB_ENV"
+          echo "SITE_ORIGIN=${CUSTOM_ORIGIN:-https://$REPO_OWNER.github.io}" >> "$GITHUB_ENV"
+      - run: npm test
+      - run: npm run build
+      - run: npm run test:browser
+      - uses: actions/upload-pages-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          path: dist
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/deploy-pages@v4
+        id: deployment

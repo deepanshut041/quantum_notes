@@ -1,6 +1,7 @@
 ---
 title: Qubits and quantum states
 course: IBM · Basics of quantum information
+course_id: ibm-quantum
 description: Amplitudes, the computational basis, and what a measurement tells us.
 updated: "2026-09-26"
 order: 1
@@ -50,7 +51,7 @@ $$
 \ket{\psi} = \begin{pmatrix}\alpha\\\beta\end{pmatrix}.
 $$
 
-They are orthonormal: $\braket{0|1}=0$, and each has norm one. See [vectors and inner products](../math-foundations/01-vectors-and-inner-products.md) for the linear algebra.
+They are orthonormal: $\braket{0|1}=0$, and each has norm one. See [vectors and inner products](../mathematics/01-vectors-and-inner-products.md) for the linear algebra.
 
 ## Measurement probabilities
 
@@ -94,4 +95,4 @@ Superposition does not let us read both amplitudes from a single measurement. Es
 
 ## Next connection
 
-[Quantum gates and interference](02-gates-and-interference.md) explains how gates act on these vectors.
+[Quantum gates and interference](../gates-and-circuits/02-gates-and-interference.md) explains how gates act on these vectors.

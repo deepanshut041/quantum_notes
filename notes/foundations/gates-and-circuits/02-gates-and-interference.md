@@ -1,6 +1,7 @@
 ---
 title: Quantum gates and interference
 course: IBM · Basics of quantum information
+course_id: ibm-quantum
 description: Unitary operations, the Hadamard gate, and the role of phase.
 updated: "2026-09-26"
 order: 2
@@ -57,7 +58,7 @@ $$
 HZH=X, \qquad HZH\ket{0}=\ket{1}.
 $$
 
-The relative phase introduced by Z becomes a different measurement outcome after H. This is a useful bridge from [qubits](01-qubits-and-states.md) to interference-based algorithms.
+The relative phase introduced by Z becomes a different measurement outcome after H. This is a useful bridge from [qubits](../states-and-measurement/01-qubits-and-states.md) to interference-based algorithms.
 
 ## Check your understanding
 

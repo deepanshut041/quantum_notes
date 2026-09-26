@@ -40,13 +40,23 @@ try {
     await ready();
     await save(`${note.id}.pdf`);
   }
-  for (const course of [...manifest.courses, { id: null, notes: manifest.notes.map(n => n.id) }]) {
+  for (const collection of [
+    ...manifest.courses.map(c => ({ ...c, file: `courses/${c.id}.pdf` })),
+    ...manifest.sections.map(s => ({ ...s, file: `sections/${s.id}.pdf` })),
+    { notes: manifest.notes.map(n => n.id), file: 'quantum-notes.pdf' },
+  ]) {
     await page.goto(`${origin}${base}print/`, { waitUntil: 'networkidle' });
     await ready();
-    await page.evaluate(ids => window.preparePrintCollection(ids), course.notes);
+    await page.evaluate(ids => window.preparePrintCollection(ids), collection.notes);
     if (errors.length) throw new Error(errors.join('\n'));
-    await save(course.id ? `courses/${course.id}.pdf` : 'quantum-notes.pdf');
+    await save(collection.file);
   }
+  for (const [oldId, newId] of Object.entries(manifest.legacyNotes)) {
+    const target = path.join(output, `${oldId}.pdf`);
+    await fs.mkdir(path.dirname(target), { recursive: true });
+    await fs.copyFile(path.join(output, `${newId}.pdf`), target);
+  }
+  await fs.copyFile(path.join(output, 'sections/foundations.pdf'), path.join(output, 'courses/math-foundations.pdf'));
   // Replace the fixed PDF cache so removed notes cannot leave stale downloads behind.
   await fs.rm(path.join(root, '.cache/pdf'), { recursive: true, force: true });
   await fs.cp(output, path.join(root, '.cache/pdf'), { recursive: true });

@@ -25,6 +25,19 @@ try {
   await page.getByRole('button', { name: 'Expand sidebar' }).click();
   await page.waitForFunction(() => document.querySelector('.sidebar').getBoundingClientRect().width >= 257);
   await page.screenshot({ path: 'test-results/library-desktop.png', fullPage: true });
+  await page.goto(origin + base + 'sections/');
+  for (const stage of ['Foundations', 'Basic Algorithms', 'Advanced Algorithms', 'Research']) assert.ok(await page.getByRole('link', { name: new RegExp(stage) }).count() > 0);
+  await page.screenshot({ path: 'test-results/learning-path.png', fullPage: true });
+  await page.goto(origin + base + 'sections/basic-algorithms/');
+  assert.ok(await page.getByRole('link', { name: /Oracle algorithms/ }).count() > 0);
+  await page.goto(origin + base + 'sections/basic-algorithms/oracle-algorithms/');
+  assert.match(await page.locator('.empty-topic').innerText(), /No notes here yet/);
+  await page.screenshot({ path: 'test-results/empty-topic.png', fullPage: true });
+  await page.goto(origin + base + 'courses/ibm-quantum/');
+  assert.ok(await page.getByRole('link', { name: /Qubits and quantum states/ }).count() > 0);
+  assert.ok(await page.getByRole('link', { name: /Quantum gates and interference/ }).count() > 0);
+  await page.goto(origin + base + 'notes/ibm-quantum/01-qubits-and-states/');
+  await page.waitForURL(origin + base + 'notes/foundations/states-and-measurement/01-qubits-and-states/');
   for (const note of data.notes) {
     await page.goto(origin + note.url);
     await page.waitForFunction(() => document.documentElement.dataset.ready);
@@ -55,9 +68,9 @@ try {
   assert.equal(await page.locator('#print-root .print-note').count(), data.notes.length);
   assert.equal(await page.locator('#print-root .katex-error').count(), 0);
   assert.equal(await page.locator('#print-root .mermaid:not([data-processed])').count(), 0);
-  for (const url of [base + 'pdf/quantum-notes.pdf', ...data.courses.map(c => c.pdf)]) assert.equal((await fetch(origin + url)).status, 200);
+  for (const url of [base + 'pdf/quantum-notes.pdf', ...data.courses.map(c => c.pdf), ...data.sections.map(s => s.pdf)]) assert.equal((await fetch(origin + url)).status, 200);
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const url of [base, first.url, base + 'export/', base + 'guide/']) {
+  for (const url of [base, base + 'sections/', base + 'sections/research/', base + 'sections/research/papers/', first.url, base + 'export/', base + 'guide/']) {
     await page.goto(origin + url);
     await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `Mobile overflow at ${url}`);

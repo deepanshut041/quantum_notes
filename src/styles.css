@@ -21,8 +21,9 @@ svg { flex-shrink: 0; }
 .sidebar-courses a:hover { color: var(--accent); }
 .sidebar-courses small { margin-left: auto; color: #81918b; }
 .course-dot, .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #55a798; flex-shrink: 0; display: inline-block; }
-.sidebar-courses a:nth-of-type(2) .course-dot { background: #8595c4; }
-.sidebar-courses a:nth-of-type(3) .course-dot { background: #cba474; }
+.course-dot.stage-1 { background: #8595c4; }
+.course-dot.stage-2 { background: #cba474; }
+.course-dot.stage-3 { background: #ae80a5; }
 .sidebar-footer { margin-top: auto; border-top: 1px solid #e6eaf0; padding: 17px 8px 0; display: flex; align-items: center; gap: 8px; font-size: 10px; color: #7b8594; flex-wrap: wrap; }
 .sidebar-footer a { margin-left: auto; }
 .sidebar-collapsed .sidebar-caption, .sidebar-collapsed .sidebar-courses, .sidebar-collapsed .sidebar-footer { display: none; }
@@ -58,6 +59,11 @@ kbd { border: 1px solid #e0e5eb; background: #f8fafc; border-radius: 3px; paddin
 .docs-row-icon.folder { background: #eff6f3; color: #598679; }
 .docs-row-icon.file { background: #f0f3f9; color: #788da9; }
 .docs-row-count, .docs-row-date { font-size: 10px; color: #8a94a3; }
+.stage-row .docs-row-copy > span { max-width: 720px; }
+.empty-topic { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 26px 22px 30px; color: #728292; font-size: 12px; }
+.empty-topic strong { color: #344457; font-size: 14px; }
+.empty-topic a { display: inline-flex; align-items: center; gap: 7px; margin-top: 5px; color: var(--accent); text-decoration: none; }
+.empty-topic svg { width: 15px; }
 .row-tags { display: flex; gap: 5px; margin-right: 15px; }
 .tag { font-size: 9px; padding: 3px 6px; border: 1px solid #e4e9ed; border-radius: 4px; color: #7b8796; background: #fafcfd; white-space: nowrap; }
 .author-hint { display: flex; align-items: center; gap: 14px; border: 1px dashed #d7e1df; border-radius: 7px; padding: 19px 20px; margin-top: 23px; color: #64867e; }
@@ -69,7 +75,8 @@ kbd { border: 1px solid #e0e5eb; background: #f8fafc; border-radius: 3px; paddin
 .reader-main { min-width: 0; }
 .markdown { max-width: none; padding: 30px 36px; font-size: 15px; }
 .markdown h2 { font-size: 21px; }
-.document-metadata { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.document-metadata { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.document-metadata a { color: var(--accent); text-decoration: none; }
 .document-metadata dd { font-size: 11px; font-weight: 500; line-height: 1.5; }
 .document-metadata > div { border-bottom: 0; }
 .document-metadata dt { font-size: 10px; }
@@ -131,6 +138,7 @@ kbd { border: 1px solid #e0e5eb; background: #f8fafc; border-radius: 3px; paddin
 .export-settings-body hr { border: 0; border-top: 1px solid #e5e9ef; margin: 25px 0; }
 .export-course-links { margin-top: 25px; }
 .export-course-links a { display: block; font-size: 11px; color: var(--accent); margin-top: 12px; }
+.export-subheading { margin-top: 22px; }
 .skip-link { position: fixed; top: -100px; z-index: 100; padding: 12px; background: white; }
 .skip-link:focus { top: 8px; left: 8px; }
 #print-root { position: absolute; left: -20000px; top: 0; width: 750px; }
@@ -202,7 +210,7 @@ kbd { border: 1px solid #e0e5eb; background: #f8fafc; border-radius: 3px; paddin
   .diagram-viewport { overflow: visible; }
   .mermaid { zoom: 1 !important; }
   .mermaid svg { max-height: 110mm; max-width: 100%; }
-  .document-metadata { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .document-metadata { grid-template-columns: repeat(4, minmax(0,1fr)); }
   a { text-decoration: none; }
   * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   #print-root { display: none; }

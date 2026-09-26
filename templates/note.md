@@ -1,6 +1,5 @@
 ---
 title: "Your note title"
-course: "Your course name"
 description: "One sentence explaining what this note covers."
 updated: "2026-09-26"
 order: 1

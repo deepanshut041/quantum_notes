@@ -1,6 +1,7 @@
 ---
 title: The Schrödinger equation
 course: MIT 8.04 · Quantum Physics I
+course_id: mit-8-04
 description: Time evolution, the Hamiltonian, and stationary states.
 updated: "2026-09-26"
 order: 2
@@ -61,4 +62,4 @@ $$
 U(t)=e^{-i\hat{H}t/\hbar}.
 $$
 
-This connects continuous time evolution with the unitary matrices used in [quantum gates](../ibm-quantum/02-gates-and-interference.md).
+This connects continuous time evolution with the unitary matrices used in [quantum gates](../gates-and-circuits/02-gates-and-interference.md).

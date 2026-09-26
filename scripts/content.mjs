@@ -6,6 +6,7 @@ import anchor from 'markdown-it-anchor';
 import container from 'markdown-it-container';
 import { katex } from '@mdit/plugin-katex';
 import sanitizeHtml from 'sanitize-html';
+import { sections as sectionDefinitions } from '../sections.mjs';
 
 export const escape = (value) => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 export const slug = value => String(value).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -14,11 +15,13 @@ export function normalizeBase(value) {
   return value;
 }
 export function validateMetadata(data, filename) {
-  for (const field of ['title', 'course', 'description', 'updated']) {
+  for (const field of ['title', 'description', 'updated']) {
     if (typeof data[field] !== 'string' || !data[field].trim()) throw new Error(`${filename}: frontmatter needs a non-empty ${field}.`);
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(data.updated) || Number.isNaN(Date.parse(data.updated)) || new Date(data.updated).toISOString().slice(0, 10) !== data.updated) throw new Error(`${filename}: updated must be a quoted YYYY-MM-DD date.`);
   if (data.tags && (!Array.isArray(data.tags) || data.tags.some(t => typeof t !== 'string'))) throw new Error(`${filename}: tags must be a list of strings.`);
+  if (data.course !== undefined && (typeof data.course !== 'string' || !data.course.trim())) throw new Error(`${filename}: course must be a non-empty string when supplied.`);
+  if (data.course_id !== undefined && (!data.course || !/^[a-z0-9_-]+$/.test(data.course_id))) throw new Error(`${filename}: course_id needs a course and a lowercase slug.`);
   if (data.order !== undefined && !Number.isFinite(data.order)) throw new Error(`${filename}: order must be a number.`);
   for (const source of data.sources ?? []) {
     if (typeof source.title !== 'string' || !source.title || !/^https?:\/\//.test(source.url ?? '')) throw new Error(`${filename}: each source needs a title and an https URL.`);
@@ -99,21 +102,35 @@ export async function readNotes(root, base) {
   const notePaths = new Set(files.filter(f => f.endsWith('.md')));
   const assetPaths = new Set(files.filter(f => !f.endsWith('.md')));
   const notes = [];
+  const sections = sectionDefinitions.map(section => ({ ...section, topics: section.topics.map(topic => ({ ...topic, sectionId: section.id, sectionTitle: section.title, notes: [] })), notes: [] }));
+  const topicByPath = new Map(sections.flatMap(section => section.topics.map(topic => [`${section.id}/${topic.id}`, topic])));
   for (const file of notePaths) {
-    if (!/^[a-z0-9_-]+(?:\/[a-z0-9_-]+)+\.md$/.test(file)) throw new Error(`Use lowercase course/note.md paths: ${file}`);
+    if (!/^[a-z0-9_-]+\/[a-z0-9_-]+\/[a-z0-9_-]+\.md$/.test(file)) throw new Error(`Use notes/<section>/<topic>/<note>.md paths: ${file}`);
+    const [sectionId, topicId] = file.split('/');
+    const topic = topicByPath.get(`${sectionId}/${topicId}`);
+    if (!topic) throw new Error(`${file}: add this section/topic to sections.mjs first.`);
     const raw = await fs.readFile(path.join(root, file), 'utf8');
     const { data, content } = matter(raw);
     validateMetadata(data, file);
-    const courseId = file.split('/')[0];
+    const courseId = data.course ? (data.course_id ?? slug(data.course)) : null;
     const id = file.replace(/\.md$/, '');
     const rendered = renderMarkdown(content.trimStart(), { base, relativePath: file, notePaths, assetPaths });
-    notes.push({ ...data, ...rendered, raw, id, file, courseId, tags: data.tags ?? [], order: data.order ?? 100, minutes: Math.max(1, Math.ceil(content.split(/\s+/).length / 180)), url: `${base}notes/${id}/`, pdf: `${base}pdf/${id}.pdf`, markdown: `${base}source/${file}`, search: `${data.title} ${data.course} ${data.tags ?? ''} ${content}`.toLowerCase() });
+    const note = { ...data, ...rendered, raw, id, file, sectionId, topicId, sectionTitle: topic.sectionTitle, topicTitle: topic.title, courseId, courseUrl: courseId ? `${base}courses/${courseId}/` : null, tags: data.tags ?? [], order: data.order ?? 100, minutes: Math.max(1, Math.ceil(content.split(/\s+/).length / 180)), url: `${base}notes/${id}/`, pdf: `${base}pdf/${id}.pdf`, markdown: `${base}source/${file}`, search: `${data.title} ${data.course ?? ''} ${topic.sectionTitle} ${topic.title} ${data.tags ?? ''} ${content}`.toLowerCase() };
+    notes.push(note);
+    topic.notes.push(note);
   }
-  if (!notes.length) throw new Error('Add at least one Markdown note under notes/<course>/.');
-  const courses = [...new Set(notes.map(n => n.courseId))].map(id => {
+  if (!notes.length) throw new Error('Add at least one Markdown note under notes/<section>/<topic>/.');
+  for (const section of sections) {
+    for (const topic of section.topics) {
+      topic.notes.sort((a, b) => a.order - b.order || a.file.localeCompare(b.file));
+      section.notes.push(...topic.notes);
+    }
+  }
+  const courses = [...new Set(notes.map(n => n.courseId).filter(Boolean))].map(id => {
     const members = notes.filter(n => n.courseId === id).sort((a, b) => a.order - b.order || a.file.localeCompare(b.file));
-    if (new Set(members.map(n => n.course)).size !== 1) throw new Error(`${id}: all notes in a course folder must use the same course name.`);
+    if (new Set(members.map(n => n.course)).size !== 1) throw new Error(`${id}: all notes with this course_id must use the same course name.`);
     return { id, title: members[0].course, notes: members };
   });
-  return { notes, courses, assets: [...assetPaths] };
+  if (new Set(courses.map(c => c.title)).size !== courses.length) throw new Error('A course name uses multiple course_id values.');
+  return { notes: sections.flatMap(s => s.notes), sections, courses, assets: [...assetPaths] };
 }

@@ -26,7 +26,7 @@ if (search) {
     document.querySelector('#library-default').hidden = Boolean(query);
     const target = document.querySelector('#search-results');
     target.hidden = !query;
-    target.innerHTML = results.length ? results.map(n => `<a class="search-result" href="${n.url}"><strong>${escape(n.title)}</strong><span>${escape(n.course)} · ${n.tags.map(escape).join(' · ')}</span></a>`).join('') : '<p class="docs-empty">No notes match this search. Try a course name or another topic.</p>';
+    target.innerHTML = results.length ? results.map(n => `<a class="search-result" href="${n.url}"><strong>${escape(n.title)}</strong><span>${escape(n.sectionTitle)} · ${escape(n.topicTitle)}${n.course ? ` · ${escape(n.course)}` : ''} · ${n.tags.map(escape).join(' · ')}</span></a>`).join('') : '<p class="docs-empty">No notes match this search. Try a course name or another topic.</p>';
     document.querySelector('#search-status').textContent = `${results.length} ${results.length === 1 ? 'note' : 'notes'}${query ? ' found' : ''}`;
   });
   document.addEventListener('keydown', event => {
@@ -69,7 +69,7 @@ window.preparePrintCollection = async (ids) => {
   const selected = ids.map(id => data.notes.find(n => n.id === id));
   if (!ids.length || selected.some(n => !n)) throw new Error('Choose at least one valid note.');
   const target = document.querySelector('#print-root');
-  target.innerHTML = selected.map(n => `<section class="print-note"><div class="print-brand">QUANTUM NOTES / ${escape(n.course)}</div><h1>${escape(n.title)}</h1>${n.html}</section>`).join('');
+  target.innerHTML = selected.map(n => `<section class="print-note"><div class="print-brand">QUANTUM NOTES / ${escape(n.section)} / ${escape(n.topic)}</div><h1>${escape(n.title)}</h1>${n.html}</section>`).join('');
   // Prefix fragment IDs so repeated headings across notes stay unique in collections.
   target.querySelectorAll('.print-note').forEach((section, i) => {
     const ids = new Map();
@@ -109,7 +109,7 @@ if (document.body.hasAttribute('data-export-page')) {
     finally { update(); }
   });
   catalog().then(data => {
-    document.querySelector('.export-course-links').innerHTML = `<span class="section-label">COURSE PDFS</span>${data.courses.map(c => `<a href="${c.pdf}" download>${escape(c.title)} ↗</a>`).join('')}`;
+    document.querySelector('.export-course-links').innerHTML = `<span class="section-label">STAGE PDFS</span>${data.sections.map(s => `<a href="${s.pdf}" download>${escape(s.title)} ↗</a>`).join('')}<span class="section-label export-subheading">COURSE PDFS</span>${data.courses.map(c => `<a href="${c.pdf}" download>${escape(c.title)} ↗</a>`).join('')}`;
   }).catch(error => { status.textContent = error.message; });
 }
 

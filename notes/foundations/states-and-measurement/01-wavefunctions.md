@@ -1,6 +1,7 @@
 ---
 title: Wavefunctions and probability
 course: MIT 8.04 · Quantum Physics I
+course_id: mit-8-04
 description: The continuous-state picture, normalization, and probability density.
 updated: "2026-09-26"
 order: 1
@@ -35,7 +36,7 @@ $$
 \int_{-\infty}^{\infty}|\psi(x,t)|^2\,dx=1.
 $$
 
-This plays the same role as the sum of squared amplitudes in a [qubit state](../ibm-quantum/01-qubits-and-states.md).
+This plays the same role as the sum of squared amplitudes in a [qubit state](../states-and-measurement/01-qubits-and-states.md).
 
 ## Position expectation value
 

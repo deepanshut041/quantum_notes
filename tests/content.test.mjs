@@ -11,7 +11,9 @@ test('base paths support project Pages and custom domains', () => {
 test('missing and invalid note metadata fail before publishing', () => {
   const data = { title: 'A', course: 'B', description: 'C', updated: '2026-09-26' };
   validateMetadata(data, 'note.md');
+  validateMetadata({ title: 'A', description: 'C', updated: '2026-09-26' }, 'independent.md');
   assert.throws(() => validateMetadata({ ...data, course: '' }, 'note.md'), /course/);
+  assert.throws(() => validateMetadata({ ...data, course_id: 'Bad ID' }, 'note.md'), /course_id/);
   assert.throws(() => validateMetadata({ ...data, updated: '2026-02-30' }, 'note.md'), /updated/);
   assert.throws(() => validateMetadata({ ...data, tags: 'tag' }, 'note.md'), /tags/);
 });
@@ -40,8 +42,12 @@ test('duplicate headings have unique IDs for the table of contents', () => {
   assert.equal(new Set(headings.map(h => h.slug)).size, 2);
 });
 test('all repository notes and links validate', async () => {
-  const { notes, courses } = await readNotes(fileURLToPath(new URL('../notes', import.meta.url)), '/quantum_notes/');
+  const { notes, courses, sections } = await readNotes(fileURLToPath(new URL('../notes', import.meta.url)), '/quantum_notes/');
   assert.ok(notes.length > 0);
   assert.ok(courses.length > 0);
   assert.ok(notes.every(n => n.html && n.title && n.url.startsWith('/quantum_notes/')));
+  assert.deepEqual(sections.map(s => s.id), ['foundations', 'basic-algorithms', 'advanced-algorithms', 'research']);
+  assert.ok(sections.every(s => s.topics.length > 0));
+  assert.ok(notes.every(n => n.file.startsWith(`${n.sectionId}/${n.topicId}/`)));
+  assert.ok(courses.some(c => c.notes.some(n => n.topicId === 'states-and-measurement') && c.notes.some(n => n.topicId === 'gates-and-circuits')));
 });

@@ -1,6 +1,5 @@
 ---
 title: Vectors, inner products, and bra-ket notation
-course: Mathematical foundations
 description: The linear algebra behind states, amplitudes, and orthogonality.
 updated: "2026-09-26"
 order: 1
@@ -41,9 +40,9 @@ The inner product is conjugate-linear in the first argument and linear in the se
 
 | Property | Condition | Interpretation |
 | --- | --- | --- |
-| Normalized | $\braket{v|v}=1$ | Unit length |
-| Orthogonal | $\braket{u|v}=0$ | Zero overlap |
-| Orthonormal basis | $\braket{e_i|e_j}=\delta_{ij}$ | Mutually orthogonal unit vectors spanning the space |
+| Normalized | $\langle v,v\rangle=1$ | Unit length |
+| Orthogonal | $\langle u,v\rangle=0$ | Zero overlap |
+| Orthonormal basis | $\langle e_i,e_j\rangle=\delta_{ij}$ | Mutually orthogonal unit vectors spanning the space |
 
 ## A complex example
 
@@ -60,4 +59,4 @@ $$
 
 ## Where this shows up
 
-This language appears in both [qubit states](../ibm-quantum/01-qubits-and-states.md) and [wavefunctions](../mit-8-04/01-wavefunctions.md). The mathematics is shared even when the representation changes.
+This language appears in both [qubit states](../states-and-measurement/01-qubits-and-states.md) and [wavefunctions](../states-and-measurement/01-wavefunctions.md). The mathematics is shared even when the representation changes.

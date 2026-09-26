@@ -2,22 +2,23 @@
 
 ## Create a note
 
-Keep notes inside `notes/<course-folder>/<note-name>.md`. Course folders and filenames use lowercase letters, numbers, hyphens, or underscores. The website discovers them automatically.
+Keep notes inside `notes/<section>/<topic>/<note-name>.md`. The website has four stages: **Foundations**, **Basic Algorithms**, **Advanced Algorithms**, and **Research**. Each stage has topics listed in `sections.mjs`. All stages and topics appear on the site, even before they have notes. Choose the topic by the main idea of the note; link a course separately if it supplied or inspired the material. Paths use lowercase letters, numbers, hyphens, or underscores.
 
 ```bash
-npm run new:note -- --course ibm-quantum --title "Entanglement"
+npm run new:note -- --section foundations --topic states-and-measurement --title "Entanglement" --course ibm-quantum
 ```
 
-For a new course, also supply `--course-title "My course name"`. You can instead copy `templates/note.md` into a course folder and edit it.
+Omit `--course` for an independent study note. Use `--course-title "My course name"` to introduce a new course. A course can appear in many stages and topics. To introduce a new topic, add its ID, title, and description to `sections.mjs`, then make a note in the matching folder. You can instead copy `templates/note.md` into a topic folder and edit it.
 
 ## Required metadata
 
-Every note begins with YAML frontmatter. Use the same course name for every note in a course folder. Quote dates so they remain strings.
+Every note begins with YAML frontmatter. Quote dates so they remain strings. Course metadata is optional and does not determine the note's topic.
 
 ```yaml
 ---
 title: "Entanglement"
 course: "IBM · Basics of quantum information"
+course_id: ibm-quantum
 description: "Correlations in composite quantum systems."
 updated: "2026-09-26"
 order: 3
@@ -29,7 +30,7 @@ sources:
 ---
 ```
 
-The title, course, description, and updated date are required. `order` controls sequence within a course. The source links appear under References.
+The title, description, and updated date are required. Use `course` and `course_id` together for an existing course; repeat the same name and ID wherever its notes appear. `order` controls sequence within a topic. The source links appear under References. For research notes, link the actual paper in `sources` and separate the paper's claims from your own observations.
 
 ## Equations
 
@@ -102,15 +103,15 @@ Use ordinary Markdown paragraphs outside HTML blocks for equations and other Mar
 
 ## Links, images, and code
 
-Link notes with relative `.md` paths: for example, `[Gates](02-gates-and-interference.md)` from a note in the same folder. The builder validates and rewrites these to website URLs, including the GitHub Pages prefix.
+Link notes with relative `.md` paths: for example, `[Gates](../gates-and-circuits/02-gates-and-interference.md)` from a note in `foundations/states-and-measurement/`. The builder validates and rewrites these to website URLs, including the GitHub Pages prefix.
 
-Place images in a course's `assets` folder and reference them with Markdown, such as `![Circuit](assets/circuit.png)`. Supported asset formats are PNG, JPEG, GIF, WebP, SVG, and PDF. Use Markdown links for local assets so paths are rewritten automatically; use absolute HTTPS URLs inside raw HTML.
+Place images in a topic's `assets` folder and reference them with Markdown, such as `![Circuit](assets/circuit.png)`. Supported asset formats are PNG, JPEG, GIF, WebP, SVG, and PDF. Use Markdown links for local assets so paths are rewritten automatically; use absolute HTTPS URLs inside raw HTML.
 
 Use fenced code blocks, ordinary Markdown tables, numbered lists, and blockquotes as needed.
 
 ## Download and publish
 
-Each note has a **Download PDF** button and a **Markdown** download. The Export page also provides course PDFs and the complete notebook, or lets you select notes and save them through the print dialog.
+Each note has a **Download PDF** button and a **Markdown** download. The Export page also provides PDFs for populated stages, courses, and the complete notebook, or lets you select notes and save them through the print dialog.
 
 ```bash
 npm run build

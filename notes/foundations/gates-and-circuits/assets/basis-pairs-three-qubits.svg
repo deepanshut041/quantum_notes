@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 456" role="img" aria-labelledby="title desc">
+  <title id="title">Three-qubit amplitude pairs for a gate on the middle qubit</title>
+  <desc id="desc">Four disjoint pairs of decimal basis labels: zero with two, one with three, four with six, and five with seven. Each pair differs by the middle-bit weight of two.</desc>
+  <rect width="900" height="456" rx="20" fill="#f6f9fa"/>
+  <text x="36" y="52" font-family="Arial,sans-serif" font-size="27" font-weight="700" fill="#12364a">Gate on q₁: flip the bit worth 2</text>
+  <text x="36" y="80" font-family="Arial,sans-serif" font-size="16" fill="#496578">Each card is one independent 2 × 2 amplitude update. The other bits stay fixed.</text>
+  <g font-family="Arial,sans-serif" text-anchor="middle">
+    <g transform="translate(36 110)">
+      <rect width="397" height="145" rx="14" fill="#e9f5f2" stroke="#9bcfc5" stroke-width="2"/>
+      <text x="198" y="30" font-size="15" fill="#355b56">q₂ = 0 · q₀ = 0</text>
+      <circle cx="101" cy="83" r="31" fill="#ffffff" stroke="#008b79" stroke-width="3"/>
+      <circle cx="296" cy="83" r="31" fill="#ffffff" stroke="#008b79" stroke-width="3"/>
+      <path d="M139 83 H257" stroke="#008b79" stroke-width="3" marker-end="url(#arrow)"/>
+      <text x="101" y="91" font-size="25" font-weight="700" fill="#12364a">0</text>
+      <text x="296" y="91" font-size="25" font-weight="700" fill="#12364a">2</text>
+      <text x="198" y="128" font-size="16" fill="#355b56">|000⟩ ↔ |010⟩</text>
+    </g>
+    <g transform="translate(467 110)">
+      <rect width="397" height="145" rx="14" fill="#ebf0fb" stroke="#afc5e7" stroke-width="2"/>
+      <text x="198" y="30" font-size="15" fill="#405c84">q₂ = 0 · q₀ = 1</text>
+      <circle cx="101" cy="83" r="31" fill="#ffffff" stroke="#476fb7" stroke-width="3"/>
+      <circle cx="296" cy="83" r="31" fill="#ffffff" stroke="#476fb7" stroke-width="3"/>
+      <path d="M139 83 H257" stroke="#476fb7" stroke-width="3" marker-end="url(#arrow-blue)"/>
+      <text x="101" y="91" font-size="25" font-weight="700" fill="#12364a">1</text>
+      <text x="296" y="91" font-size="25" font-weight="700" fill="#12364a">3</text>
+      <text x="198" y="128" font-size="16" fill="#405c84">|001⟩ ↔ |011⟩</text>
+    </g>
+    <g transform="translate(36 274)">
+      <rect width="397" height="145" rx="14" fill="#fcf2e6" stroke="#e4c394" stroke-width="2"/>
+      <text x="198" y="30" font-size="15" fill="#755934">q₂ = 1 · q₀ = 0</text>
+      <circle cx="101" cy="83" r="31" fill="#ffffff" stroke="#c57b22" stroke-width="3"/>
+      <circle cx="296" cy="83" r="31" fill="#ffffff" stroke="#c57b22" stroke-width="3"/>
+      <path d="M139 83 H257" stroke="#c57b22" stroke-width="3" marker-end="url(#arrow-gold)"/>
+      <text x="101" y="91" font-size="25" font-weight="700" fill="#12364a">4</text>
+      <text x="296" y="91" font-size="25" font-weight="700" fill="#12364a">6</text>
+      <text x="198" y="128" font-size="16" fill="#755934">|100⟩ ↔ |110⟩</text>
+    </g>
+    <g transform="translate(467 274)">
+      <rect width="397" height="145" rx="14" fill="#f6ecf7" stroke="#d4b6d7" stroke-width="2"/>
+      <text x="198" y="30" font-size="15" fill="#725274">q₂ = 1 · q₀ = 1</text>
+      <circle cx="101" cy="83" r="31" fill="#ffffff" stroke="#9a5ca0" stroke-width="3"/>
+      <circle cx="296" cy="83" r="31" fill="#ffffff" stroke="#9a5ca0" stroke-width="3"/>
+      <path d="M139 83 H257" stroke="#9a5ca0" stroke-width="3" marker-end="url(#arrow-purple)"/>
+      <text x="101" y="91" font-size="25" font-weight="700" fill="#12364a">5</text>
+      <text x="296" y="91" font-size="25" font-weight="700" fill="#12364a">7</text>
+      <text x="198" y="128" font-size="16" fill="#725274">|101⟩ ↔ |111⟩</text>
+    </g>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#008b79"/></marker>
+    <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#476fb7"/></marker>
+    <marker id="arrow-gold" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#c57b22"/></marker>
+    <marker id="arrow-purple" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#9a5ca0"/></marker>
+  </defs>
+</svg>

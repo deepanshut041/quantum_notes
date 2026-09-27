@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 420" role="img" aria-labelledby="title desc">
+  <title id="title">Fourth roots of unity phase clock</title>
+  <desc id="desc">A complex plane showing phases 1, i, minus 1, and minus i at right, top, left, and bottom of a circle.</desc>
+  <rect width="650" height="420" rx="18" fill="#f8fbff"/>
+  <g transform="translate(300 210)" fill="none" stroke-linecap="round">
+    <path d="M-225 0 H225 M0 -175 V175" stroke="#496782" stroke-width="2"/>
+    <circle r="135" stroke="#8eb1d2" stroke-width="3"/>
+    <path d="M0 0 H135 M0 0 V-135 M0 0 H-135 M0 0 V135" stroke="#d3643b" stroke-width="4"/>
+    <path d="M130 -20 L135 0 L130 20" stroke="#d3643b" stroke-width="3"/>
+    <path d="M-20 -130 L0 -135 L20 -130" stroke="#d3643b" stroke-width="3"/>
+    <path d="M-130 -20 L-135 0 L-130 20" stroke="#d3643b" stroke-width="3"/>
+    <path d="M-20 130 L0 135 L20 130" stroke="#d3643b" stroke-width="3"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="22" fill="#173454">
+    <text x="450" y="217">1 = i⁰</text>
+    <text x="312" y="61">i = i¹</text>
+    <text x="40" y="217">−1 = i²</text>
+    <text x="312" y="378">−i = i³</text>
+  </g>
+  <text x="23" y="31" font-family="Arial, sans-serif" font-size="17" fill="#47627e">Multiplying by i turns a phase arrow one quarter-turn counterclockwise.</text>
+</svg>

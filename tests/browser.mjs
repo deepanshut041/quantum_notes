@@ -14,6 +14,26 @@ try {
   await page.goto(origin + base);
   const data = await (await fetch(origin + base + 'notes.json')).json();
   const first = data.notes[0];
+  const sidebarLinks = await page.locator('#primary-navigation a').allTextContents();
+  const learning = page.locator('.sidebar-learning');
+  const foundation = page.locator('.sidebar-section').first();
+  const research = page.locator('.sidebar-research');
+  assert.equal(await page.locator('.sidebar-stage').count(), 3);
+  assert.equal(await research.count(), 1);
+  assert.equal(await page.locator('.sidebar-topics a').count(), 14);
+  assert.ok(sidebarLinks.every(label => !/All notes|Courses|Export|Writing guide|GitHub/.test(label)));
+  for (const label of ['All notes', 'Courses', 'Export', 'Writing guide']) assert.equal(await page.locator('.workspace-tools').getByRole('link', { name: label, exact: true }).count(), 1);
+  assert.ok(await foundation.evaluate(el => el.open));
+  await foundation.locator('summary .tree-chevron').click();
+  assert.equal(await foundation.locator('.sidebar-topics').isVisible(), false);
+  await foundation.locator('summary .tree-chevron').click();
+  await learning.locator(':scope > summary .tree-chevron').click();
+  assert.equal(await foundation.isVisible(), false);
+  assert.ok(await research.locator('summary').isVisible());
+  await learning.locator(':scope > summary .tree-chevron').click();
+  await research.locator('summary .tree-chevron').click();
+  assert.equal(await research.locator('.sidebar-topics a:visible').count(), 3);
+  await research.locator('summary .tree-chevron').click();
   await page.getByRole('searchbox').fill(first.title);
   assert.ok(await page.locator('#search-results a').count() >= 1);
   assert.ok((await page.locator('#search-results').innerText()).includes(first.title));
@@ -25,6 +45,8 @@ try {
   await page.getByRole('button', { name: 'Expand sidebar' }).click();
   await page.waitForFunction(() => document.querySelector('.sidebar').getBoundingClientRect().width >= 257);
   await page.screenshot({ path: 'test-results/library-desktop.png', fullPage: true });
+  await foundation.locator('summary a').click();
+  await page.waitForURL(origin + base + 'sections/foundations/');
   await page.goto(origin + base + 'sections/');
   for (const stage of ['Foundations', 'Basic Algorithms', 'Advanced Algorithms', 'Research']) assert.ok(await page.getByRole('link', { name: new RegExp(stage) }).count() > 0);
   await page.screenshot({ path: 'test-results/learning-path.png', fullPage: true });
@@ -33,6 +55,10 @@ try {
   await page.goto(origin + base + 'sections/basic-algorithms/oracle-algorithms/');
   assert.match(await page.locator('.empty-topic').innerText(), /No notes here yet/);
   await page.screenshot({ path: 'test-results/empty-topic.png', fullPage: true });
+  await page.goto(origin + base + 'sections/research/papers/');
+  assert.ok(await page.locator('.sidebar-research').evaluate(el => el.open));
+  assert.equal(await page.locator('.sidebar-research .sidebar-topics a[aria-current="page"]').count(), 1);
+  await page.screenshot({ path: 'test-results/research-desktop.png', fullPage: true });
   await page.goto(origin + base + 'courses/ibm-quantum/');
   assert.ok(await page.getByRole('link', { name: /Qubits and quantum states/ }).count() > 0);
   assert.ok(await page.getByRole('link', { name: /Quantum gates and interference/ }).count() > 0);
@@ -53,6 +79,7 @@ try {
   }
   await page.goto(origin + first.url);
   await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
+  assert.equal(await page.locator('.sidebar-topics a[aria-current="page"]').count(), 1);
   await page.screenshot({ path: 'test-results/note-desktop.png', fullPage: true });
   if (await page.locator('.mermaid svg').count()) {
     await page.getByRole('button', { name: 'Zoom in', exact: true }).first().click();
@@ -77,9 +104,30 @@ try {
   }
   await page.goto(origin + first.url);
   await page.waitForFunction(() => document.documentElement.dataset.ready === 'true');
+  assert.ok(await page.locator('.sidebar-learning').evaluate(el => el.open));
+  assert.ok(await page.locator('.sidebar-section').first().evaluate(el => el.open));
   await page.screenshot({ path: 'test-results/note-mobile.png', fullPage: true });
+  assert.ok(await page.locator('.sidebar-tree').isVisible());
+  await page.locator('.sidebar-research > summary .tree-chevron').click();
+  assert.equal(await page.locator('.sidebar-research .sidebar-topics a:visible').count(), 3);
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+  await page.screenshot({ path: 'test-results/research-mobile-expanded.png' });
+  assert.equal((await (await fetch(origin + base)).text()).includes('__dev/events'), false);
+  const dev = await serve(0, { liveReload: true });
+  let devPage;
+  try {
+    devPage = await browser.newPage();
+    await devPage.goto(dev.origin + dev.base);
+    await devPage.waitForFunction(() => typeof events !== 'undefined' && events.readyState === 1);
+    const reload = devPage.waitForEvent('load');
+    dev.reload();
+    await reload;
+  } finally {
+    await devPage?.close();
+    await new Promise(resolve => dev.server.close(resolve));
+  }
   assert.deepEqual(errors, []);
-  console.log(`Browser checks passed: ${data.notes.length} notes, equations, diagrams, search, PDF/Markdown downloads, collection export, and 390px mobile layouts.`);
+  console.log(`Browser checks passed: ${data.notes.length} notes, equations, diagrams, search, PDF/Markdown downloads, collection export, live reload, and 390px mobile layouts.`);
 } finally {
   await browser?.close();
   await new Promise(resolve => server.close(resolve));

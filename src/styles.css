@@ -10,24 +10,39 @@ svg { flex-shrink: 0; }
 .sidebar { display: flex; flex-direction: column; position: sticky; height: 100vh; top: 0; padding: 25px 18px 18px; }
 .brand { text-decoration: none; font-size: 17px; gap: 9px; }
 .brand > svg { color: var(--accent); width: 24px; height: 24px; }
-.sidebar-caption { color: #84918f; font-size: 9px; font-weight: 650; letter-spacing: 1.35px; margin: 11px 0 4px 34px; }
-.nav { gap: 5px; margin-top: 27px; }
-.nav a { padding: 11px 12px; gap: 11px; font-size: 13px; }
-.nav a[aria-current] { background: #e8f5f2; color: #0b5d56; font-weight: 650; }
-.sidebar-courses { margin-top: 35px; padding: 0 10px; }
 .section-label { display: block; color: #7a8595; font-size: 10px; letter-spacing: 1px; font-weight: 650; }
-.sidebar-courses > .section-label { margin-bottom: 14px; }
-.sidebar-courses a { display: flex; gap: 9px; align-items: baseline; text-decoration: none; padding: 10px 0; color: #536074; font-size: 12px; line-height: 1.6; }
-.sidebar-courses a:hover { color: var(--accent); }
-.sidebar-courses small { margin-left: auto; color: #81918b; }
-.course-dot, .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #55a798; flex-shrink: 0; display: inline-block; }
+.sidebar-tree { flex: 1; min-height: 0; margin: 28px -8px 0 0; padding: 0 8px 14px 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.sidebar-tree summary { list-style: none; cursor: pointer; }
+.sidebar-tree summary::-webkit-details-marker { display: none; }
+.sidebar-group { margin-bottom: 17px; }
+.sidebar-group-label { display: flex; align-items: center; gap: 8px; margin: 0 0 9px; padding: 5px 9px; color: #7a8595; font-size: 10px; letter-spacing: 1px; font-weight: 650; border-radius: 5px; }
+.sidebar-group-label:hover, .sidebar-stage:hover { background: #f0f7f5; color: var(--accent-strong); }
+.sidebar-group-label a { color: inherit; }
+.sidebar-group-label .tree-chevron { margin-left: auto; }
+.sidebar-research { border-top: 1px solid #e3e9ed; padding-top: 13px; }
+.sidebar-research .sidebar-topics { margin-left: 10px; }
+.sidebar-section { margin-bottom: 3px; }
+.sidebar-tree a { text-decoration: none; border-radius: 5px; }
+.sidebar-stage { display: flex; align-items: center; gap: 8px; padding: 8px 9px; color: #344457; font-size: 12px; font-weight: 650; }
+.sidebar-stage a { min-width: 0; flex: 1; color: inherit; }
+.sidebar-stage small, .sidebar-topics small { margin-left: auto; color: #8493a1; font-size: 10px; font-weight: 400; }
+.sidebar-topics a:hover { background: #f0f7f5; color: var(--accent-strong); }
+.sidebar-tree a[aria-current] { background: #e8f5f2; color: #0b5d56; }
+.tree-chevron { display: inline-flex; color: #9aa7b1; }
+.tree-chevron svg { width: 12px; height: 12px; transition: transform .16s ease; }
+.sidebar-group[open] > summary .tree-chevron svg, .sidebar-section[open] > summary .tree-chevron svg { transform: rotate(90deg); }
+.sidebar-topics { list-style: none; margin: 1px 0 0 17px; padding: 2px 0 2px 8px; border-left: 1px solid #e3e9ed; }
+.sidebar-topics a { display: flex; align-items: baseline; gap: 6px; padding: 6px 7px; color: #607184; font-size: 11px; line-height: 1.35; }
+.sidebar-topics small { flex-shrink: 0; }
+.course-dot { width: 6px; height: 6px; border-radius: 50%; background: #55a798; flex-shrink: 0; display: inline-block; }
 .course-dot.stage-1 { background: #8595c4; }
 .course-dot.stage-2 { background: #cba474; }
 .course-dot.stage-3 { background: #ae80a5; }
-.sidebar-footer { margin-top: auto; border-top: 1px solid #e6eaf0; padding: 17px 8px 0; display: flex; align-items: center; gap: 8px; font-size: 10px; color: #7b8594; flex-wrap: wrap; }
-.sidebar-footer a { margin-left: auto; }
-.sidebar-collapsed .sidebar-caption, .sidebar-collapsed .sidebar-courses, .sidebar-collapsed .sidebar-footer { display: none; }
+.sidebar-collapsed .sidebar-tree { display: none; }
 .content { padding: 28px 38px; }
+.workspace-tools { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 4px; max-width: 1260px; padding-bottom: 12px; border-bottom: 1px solid #e7ebef; }
+.workspace-tools a { color: #647484; text-decoration: none; border-radius: 5px; padding: 6px 9px; font-size: 11px; white-space: nowrap; }
+.workspace-tools a:hover, .workspace-tools a[aria-current] { background: #e8f5f2; color: var(--accent-strong); }
 .docs-page, .docs-document-page { max-width: 1260px; }
 .docs-page-header { margin: 22px 0 27px; align-items: center; }
 .docs-page-header h1 { font-size: 29px; font-weight: 650; letter-spacing: -.7px; margin-top: 4px; }
@@ -146,13 +161,13 @@ kbd { border: 1px solid #e0e5eb; background: #f8fafc; border-radius: 3px; paddin
 @media (max-width: 800px) {
   .shell, .shell.sidebar-collapsed { display: block; }
   .sidebar { height: auto; position: static; border-right: 0; border-bottom: 1px solid var(--panel-border); padding: 14px 18px; }
-  .sidebar-courses, .sidebar-caption, .sidebar-footer { display: none; }
-  .nav { display: flex; flex-wrap: wrap; margin-top: 15px; gap: 5px; }
-  .nav a { padding: 8px 10px; }
+  .sidebar-tree { max-height: none; margin: 14px 0 0; overflow: visible; }
+  .sidebar-section { min-width: 0; }
   .shell.sidebar-collapsed .sidebar-header { flex-direction: row; }
   .shell.sidebar-collapsed .brand-label { display: inline; }
-  .sidebar-collapsed .nav { display: none; }
+  .shell.sidebar-collapsed .sidebar-tree { display: none; }
   .content { padding: 18px; }
+  .workspace-tools { justify-content: flex-start; }
   .docs-page-header { flex-wrap: wrap; gap: 12px; margin-top: 15px; }
   .docs-page-header > div:not(.document-actions) { flex: 1; min-width: 180px; }
   .docs-page-header h1 { font-size: 25px; }
@@ -176,8 +191,10 @@ kbd { border: 1px solid #e0e5eb; background: #f8fafc; border-radius: 3px; paddin
   .concept-grid { grid-template-columns: 1fr; }
   .docs-page-header h1 { font-size: 23px; }
   .page-footer span { display: none; }
-  .nav a { font-size: 11px; gap: 5px; }
-  .nav a svg { width: 15px; }
+  .sidebar-stage { font-size: 11px; }
+  .sidebar-topics { margin-left: 9px; padding-left: 5px; }
+  .sidebar-topics a { font-size: 10px; }
+  .workspace-tools a { padding: 5px 7px; font-size: 10px; }
   .markdown { padding: 20px 16px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
@@ -185,7 +202,7 @@ kbd { border: 1px solid #e0e5eb; background: #f8fafc; border-radius: 3px; paddin
 @media print {
   html, body { background: white; color: #111827; }
   .shell { display: block; }
-  .sidebar, .toc, .page-footer, .docs-breadcrumb, .document-actions, .note-pager, .diagram-tools, .skip-link { display: none !important; }
+  .sidebar, .workspace-tools, .toc, .page-footer, .docs-breadcrumb, .document-actions, .note-pager, .diagram-tools, .skip-link { display: none !important; }
   .content { padding: 0; }
   .docs-page-header { margin-top: 0; }
   .docs-page-header h1 { font-size: 25px; }

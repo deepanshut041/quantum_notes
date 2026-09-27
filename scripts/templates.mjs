@@ -17,10 +17,27 @@ export const icon = name => `<svg width="18" height="18" viewBox="0 0 24 24" fil
 const date = value => new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(new Date(value));
 export const tags = note => note.tags.map(t => `<span class="tag">${e(t)}</span>`).join('');
 
-export function shell({ config, sections, active = 'notes', title, body, exportPage = false }) {
+export function shell({ config, sections, active = 'notes', sectionId, topicId, title, body, exportPage = false }) {
   const b = config.base;
-  const nav = [['notes', '', 'book', 'All notes'], ['sections', 'sections/', 'folder', 'Learning path'], ['courses', 'courses/', 'book', 'Courses'], ['export', 'export/', 'download', 'Export'], ['guide', 'guide/', 'code', 'Writing guide']];
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${e(title)} · ${e(config.title)}</title><meta name="description" content="${e(config.description)}"><meta name="theme-color" content="#0f766e"><link rel="icon" href="${b}favicon.svg"><link rel="stylesheet" href="${b}assets/app.css"><script type="module" src="${b}assets/app.js"></script></head><body data-base="${b}" ${exportPage ? 'data-export-page' : ''}><a class="skip-link" href="#main">Skip to content</a><div class="shell"><aside class="sidebar" aria-label="Quantum Notes navigation"><div class="sidebar-header"><a class="brand" href="${b}">${icon('atom')}<span class="brand-label">Quantum Notes</span></a><button class="sidebar-toggle" aria-label="Collapse sidebar" aria-expanded="true" aria-controls="primary-navigation">${icon('panel')}</button></div><div class="sidebar-caption">THE LEARNING WORKBENCH</div><nav class="nav" id="primary-navigation" aria-label="Primary">${nav.map(([id, route, glyph, label]) => `<a href="${b}${route}" ${active === id ? 'aria-current="page"' : ''} title="${label}">${icon(glyph)}<span class="nav-label">${label}</span></a>`).join('')}</nav><div class="sidebar-courses"><div class="section-label">LEARNING PATH</div>${sections.map((s, index) => `<a href="${b}sections/${s.id}/"><span class="course-dot stage-${index}"></span><span>${e(s.title)}</span><small>${s.notes.length}</small></a>`).join('')}</div><div class="sidebar-footer"><span class="status-dot"></span><span>One note at a time.</span>${config.repository ? `<a href="https://github.com/${e(config.repository)}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>` : ''}</div></aside><main class="content" id="main" tabindex="-1">${body}<footer class="page-footer">Quantum Notes <span>Understand. Connect. Revisit.</span></footer></main></div><div id="print-root"></div></body></html>`;
+  const tools = [['notes', '', 'All notes'], ['courses', 'courses/', 'Courses'], ['export', 'export/', 'Export'], ['guide', 'guide/', 'Writing guide']];
+  const topicLinks = section => `<ul class="sidebar-topics">${section.topics.map(topic => `<li><a href="${b}sections/${section.id}/${topic.id}/" ${sectionId === section.id && topicId === topic.id ? 'aria-current="page"' : ''}>${e(topic.title)}<small>${topic.notes.length}</small></a></li>`).join('')}</ul>`;
+  const stages = sections.filter(section => section.id !== 'research').map((section, index) => `
+    <details class="sidebar-section" ${sectionId === section.id || (!sectionId && index === 0) ? 'open' : ''}>
+      <summary class="sidebar-stage"><span class="course-dot stage-${index}"></span><a href="${b}sections/${section.id}/" ${sectionId === section.id && !topicId ? 'aria-current="page"' : ''}>${e(section.title)}</a><small>${section.notes.length}</small><span class="tree-chevron">${icon('chevron')}</span></summary>
+      ${topicLinks(section)}
+    </details>`).join('');
+  const research = sections.find(section => section.id === 'research');
+  const researchTree = research ? `<details class="sidebar-group sidebar-research" ${sectionId === research.id ? 'open' : ''}>
+    <summary class="sidebar-group-label"><a href="${b}sections/${research.id}/" ${sectionId === research.id && !topicId ? 'aria-current="page"' : ''}>RESEARCH</a><span class="tree-chevron">${icon('chevron')}</span></summary>
+    ${topicLinks(research)}
+  </details>` : '';
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${e(title)} · ${e(config.title)}</title><meta name="description" content="${e(config.description)}"><meta name="theme-color" content="#0f766e"><link rel="icon" href="${b}favicon.svg"><link rel="stylesheet" href="${b}assets/app.css"><script type="module" src="${b}assets/app.js"></script></head>
+  <body data-base="${b}" ${exportPage ? 'data-export-page' : ''}><a class="skip-link" href="#main">Skip to content</a><div class="shell">
+    <aside class="sidebar" aria-label="Learning path"><div class="sidebar-header"><a class="brand" href="${b}">${icon('atom')}<span class="brand-label">Quantum Notes</span></a><button class="sidebar-toggle" aria-label="Collapse sidebar" aria-expanded="true" aria-controls="primary-navigation">${icon('panel')}</button></div>
+      <nav class="sidebar-tree" id="primary-navigation" aria-label="Sections and topics"><details class="sidebar-group sidebar-learning" open><summary class="sidebar-group-label">SECTIONS &amp; TOPICS<span class="tree-chevron">${icon('chevron')}</span></summary>${stages}</details>${researchTree}</nav>
+    </aside>
+    <main class="content" id="main" tabindex="-1"><nav class="workspace-tools" aria-label="Workspace">${tools.map(([id, route, label]) => `<a href="${b}${route}" ${active === id ? 'aria-current="page"' : ''}>${label}</a>`).join('')}${config.repository ? `<a href="https://github.com/${e(config.repository)}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>` : ''}</nav>${body}<footer class="page-footer">Quantum Notes <span>Understand. Connect. Revisit.</span></footer></main>
+  </div><div id="print-root"></div></body></html>`;
 }
 
 export function header({ eyebrow = 'Your quantum learning library', title, subtitle, actions = '', glyph = 'book' }) {

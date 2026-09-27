@@ -1,6 +1,6 @@
 # Quantum Notes
 
-A Markdown-first learning workbench for quantum topics from different courses. Notes are organized by learning stage and topic: Foundations, Basic Algorithms, Advanced Algorithms, and Research. Courses connect related notes across those topics. The interface follows the Docs Workbench in `cyberlegends-inc/ai.cyberlegends.com` and runs as a static site on GitHub Pages.
+A Markdown-first learning workbench for quantum topics from different courses. Notes are organized by learning stage and topic: Foundations, Basic Algorithms, Advanced Algorithms, and Research. The left sidebar has a collapsible learning path, with Research in its own group below it; course connections and tools are available above the page. The interface follows the Docs Workbench in `cyberlegends-inc/ai.cyberlegends.com` and runs as a static site on GitHub Pages.
 
 - Ordinary Markdown with YAML metadata; no database or backend.
 - LaTeX equations with KaTeX, including bra-ket notation.
@@ -24,7 +24,7 @@ npm run preview
 
 Open http://127.0.0.1:4173/quantum_notes/.
 
-For writing, use `npm run dev`; it rebuilds on changes to notes, docs, public assets, and styles. Refresh the browser after a rebuild. Restart it if you change scripts or configuration. Run the full build to refresh PDFs. Chromium is a build-time dependency only; readers need no plugins or extra software.
+For writing, use `npm run dev`; it rebuilds after changes to notes, docs, public assets, and styles, and restarts after script or configuration changes. The browser reloads automatically. Run the full build to refresh PDFs. Chromium is a build-time dependency only; readers need no plugins or extra software.
 
 ## Add a note
 

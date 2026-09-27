@@ -12,7 +12,7 @@ export async function build() {
   config.base = normalizeBase(config.base);
   const { notes, sections, courses, assets } = await readNotes(path.join(root, 'notes'), config.base);
   // Only the fixed, generated dist directory is cleaned; no author files live here.
-  await fs.rm(out, { recursive: true, force: true });
+  await fs.rm(out, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
   await fs.mkdir(out, { recursive: true });
   const write = async (file, text) => { const target = path.join(out, file); await fs.mkdir(path.dirname(target), { recursive: true }); await fs.writeFile(target, text); };
   await fs.cp(path.join(root, 'public'), out, { recursive: true });
@@ -21,11 +21,11 @@ export async function build() {
   await write('index.html', wrap('All notes', library({ notes, sections, base: config.base })));
   await write('sections/index.html', wrap('Learning path', `<div class="docs-page">${breadcrumbs([['Notes', config.base], ['Learning path', null]])}${header({ title: 'Learning path', subtitle: 'Move from foundations through algorithms to research. Each stage has topics ready for future notes.', glyph: 'folder' })}<div class="docs-browser">${sections.map(s => sectionRow(s, config.base)).join('')}</div></div>`, 'sections'));
   for (const section of sections) {
-    await write(`sections/${section.id}/index.html`, wrap(section.title, library({ notes, sections, base: config.base, section }), 'sections'));
+    await write(`sections/${section.id}/index.html`, wrap(section.title, library({ notes, sections, base: config.base, section }), 'sections', { sectionId: section.id }));
     for (const topic of section.topics) {
-      await write(`sections/${section.id}/${topic.id}/index.html`, wrap(topic.title, library({ notes, sections, base: config.base, section, topic }), 'sections'));
+      await write(`sections/${section.id}/${topic.id}/index.html`, wrap(topic.title, library({ notes, sections, base: config.base, section, topic }), 'sections', { sectionId: section.id, topicId: topic.id }));
       for (const note of topic.notes) {
-        await write(`notes/${note.id}/index.html`, wrap(note.title, notePage(note, topic, config.base), 'sections'));
+        await write(`notes/${note.id}/index.html`, wrap(note.title, notePage(note, topic, config.base), 'sections', { sectionId: section.id, topicId: topic.id }));
         await write(`source/${note.file}`, note.raw);
       }
     }

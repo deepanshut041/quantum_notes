@@ -13,7 +13,8 @@ export const sections = [
   {
     id: 'basic-algorithms', title: 'Basic Algorithms', description: 'First algorithmic patterns and their quantum advantage.',
     topics: [
-      { id: 'oracle-algorithms', title: 'Oracle algorithms', description: 'Deutsch–Jozsa and Bernstein–Vazirani as future study topics.' },
+      { id: 'quantum-protocols', title: 'Quantum protocols', description: 'Teleportation, dense coding, and entanglement-assisted communication.' },
+      { id: 'oracle-algorithms', title: 'Oracle algorithms', description: 'Phase kickback, Deutsch–Jozsa, Bernstein–Vazirani, and Simon.' },
       { id: 'search', title: 'Quantum search', description: 'Grover’s algorithm and amplitude amplification.' },
       { id: 'fourier-transform', title: 'Quantum Fourier transform', description: 'Fourier structure and introductory applications.' },
     ],

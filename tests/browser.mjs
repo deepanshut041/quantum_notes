@@ -20,7 +20,7 @@ try {
   const research = page.locator('.sidebar-research');
   assert.equal(await page.locator('.sidebar-stage').count(), 3);
   assert.equal(await research.count(), 1);
-  assert.equal(await page.locator('.sidebar-topics a').count(), 14);
+  assert.equal(await page.locator('.sidebar-topics a').count(), 15);
   assert.ok(sidebarLinks.every(label => !/All notes|Courses|Export|Writing guide|GitHub/.test(label)));
   for (const label of ['All notes', 'Courses', 'Export', 'Writing guide']) assert.equal(await page.locator('.workspace-tools').getByRole('link', { name: label, exact: true }).count(), 1);
   assert.ok(await foundation.evaluate(el => el.open));
@@ -53,8 +53,8 @@ try {
   await page.goto(origin + base + 'sections/basic-algorithms/');
   assert.ok(await page.getByRole('link', { name: /Oracle algorithms/ }).count() > 0);
   await page.goto(origin + base + 'sections/basic-algorithms/oracle-algorithms/');
-  assert.match(await page.locator('.empty-topic').innerText(), /No notes here yet/);
-  await page.screenshot({ path: 'test-results/empty-topic.png', fullPage: true });
+  assert.ok(await page.getByRole('link', { name: /Deutsch and Deutsch/ }).count() > 0);
+  await page.screenshot({ path: 'test-results/oracle-topic.png', fullPage: true });
   await page.goto(origin + base + 'sections/research/papers/');
   assert.ok(await page.locator('.sidebar-research').evaluate(el => el.open));
   assert.equal(await page.locator('.sidebar-research .sidebar-topics a[aria-current="page"]').count(), 1);

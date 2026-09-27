@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430" role="img" aria-labelledby="title desc">
+  <title id="title">Grover rotation in the marked and unmarked plane</title>
+  <desc id="desc">The horizontal axis is the unmarked state r and the vertical axis is the marked state w. The initial state s lies at angle theta from r; one Grover step moves it to angle three theta, a rotation of two theta.</desc>
+  <defs>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#16867b"/></marker>
+    <marker id="arrow-indigo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#5967b5"/></marker>
+  </defs>
+  <rect width="760" height="430" rx="18" fill="#f8fbfc"/>
+  <text x="28" y="36" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#172033">One Grover step rotates the state by 2θ</text>
+  <path d="M110 350 H430 M110 350 V74" stroke="#788998" stroke-width="3"/>
+  <path d="M350 350 A240 240 0 0 0 110 110" fill="none" stroke="#d6e5e7" stroke-width="3" stroke-dasharray="7 7"/>
+  <circle cx="110" cy="350" r="6" fill="#172033"/>
+  <line x1="110" y1="350" x2="336" y2="268" stroke="#16867b" stroke-width="5" marker-end="url(#arrow-teal)"/>
+  <line x1="110" y1="350" x2="230" y2="142" stroke="#5967b5" stroke-width="5" marker-end="url(#arrow-indigo)"/>
+  <path d="M184 350 A74 74 0 0 0 180 325" fill="none" stroke="#16867b" stroke-width="3"/>
+  <path d="M213 313 A110 110 0 0 0 165 255" fill="none" stroke="#5967b5" stroke-width="3"/>
+  <text x="187" y="339" font-family="Segoe UI, sans-serif" font-size="21" fill="#16867b">θ</text>
+  <text x="205" y="275" font-family="Segoe UI, sans-serif" font-size="21" fill="#5967b5">2θ</text>
+  <text x="442" y="356" font-family="Segoe UI, sans-serif" font-size="18" fill="#172033">unmarked direction |r⟩</text>
+  <text x="48" y="68" font-family="Segoe UI, sans-serif" font-size="18" fill="#172033">marked direction |w⟩</text>
+  <text x="350" y="262" font-family="Segoe UI, sans-serif" font-size="18" font-weight="600" fill="#16867b">start |s⟩ at θ</text>
+  <text x="244" y="132" font-family="Segoe UI, sans-serif" font-size="18" font-weight="600" fill="#5967b5">after G at 3θ</text>
+  <text x="445" y="108" font-family="Segoe UI, sans-serif" font-size="17" fill="#4f6171">sin θ = √(M/N)</text>
+  <text x="445" y="144" font-family="Segoe UI, sans-serif" font-size="17" fill="#4f6171">success after k steps</text>
+  <text x="445" y="174" font-family="Segoe UI, sans-serif" font-size="17" fill="#4f6171">= sin²((2k+1)θ)</text>
+  <text x="445" y="229" font-family="Segoe UI, sans-serif" font-size="16" fill="#667889">Angles and arrows are illustrative.</text>
+</svg>
